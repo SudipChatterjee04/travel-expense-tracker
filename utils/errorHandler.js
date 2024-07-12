@@ -20,6 +20,6 @@ module.exports = (res, error) => {
   
     
   
-    res.status(statusCode).json({ message });
+    res.json({ message });
   };
   

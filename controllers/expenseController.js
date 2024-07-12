@@ -3,58 +3,114 @@ const Expense = require('../models/Expense');
 
 // Create new expense (POST)
 exports.createExpense = async (req, res) => {
-  try {
+  
     const { costSplit, category,paidBy, recordedBy,note,place } = req.body;
+    console.log("hi")
     const objj = costSplit.map(([name,amount])=>({
       benefitor: name,
       value: amount
     }))
 
-    const newExpense = new Expense({ benefitorSplit:objj, amount, category, paidBy, recordedBy,note, place });
+    
+    const newExpense = new Expense({ benefitorSplit:objj, category, paidBy, recordedBy,note, place });
     const savedExpense = await newExpense.save();
 
-    res.status(201).json(savedExpense);
-  } catch (error) {
-    // errorHandler(res, error); 
-  }
+    res.json({message: "success"})
+  
 };
 
 
-exports.getExpensesByName = async (req, res) => {
-  try {
-    const userId = req.user;
-    let filter = { user: userId };
+exports.getExpense = async (req, res) => {
+  
+    const {name} = req.params;
+    
 
-    const { category, name } = req.query;
-    if (category) {
-      filter.category = category;
+    
+    
+    
+
+    const expenses = await Expense.find({paidBy: name}).sort({ timestamp: -1 }); 
+    let i=0;
+    let Map = {}
+    while(i<expenses.length){
+      let bens = expenses[i].benefitorSplit;
+      let j=0
+      while(j<bens.length){
+        let name = bens[j].benefitor;
+        if(hasOwnProperty.call(Map, name)){
+          Map[name]=Map[name]+bens[j].value
+
+        }else{
+          Map[name]=bens[j].value
+        }
+        j++;
+      }
+      i++;
     }
-    if (name) {
-      filter.name = { $regex: new RegExp(name, 'i') }; 
+    var list = []
+    for (const key in Map) {
+      let smallist = []
+      smallist.push(key)
+      smallist.push(Map[key])
+      list.push(smallist)
     }
 
-    const expenses = await Expense.find(filter).sort({ timestamp: -1 }); 
+    ret = {...expenses,list}
 
-    res.json(expenses);
-  } catch (error) {
-    errorHandler(res, error); 
-  }
+    res.json(ret);
+  
 };
 
 
-exports.getExpenseById = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const expense = await Expense.findById(id);
+exports.getOwnExpenses = async (req, res) => {
+  
+    const { name } = req.params;
+    
+    const expense = await Expense.find();
+    
     if (!expense) {
       return res.status(404).json({ message: 'Expense not found' });
     }
 
-    res.json(expense);
-  } catch (error) {
-    errorHandler(res, error); 
-  }
+    let i=0
+    var cost = []
+    for(;i<expense.length;i++){
+      var x = expense[i].benefitorSplit
+      var microcost =0
+      var topay = expense[i].paidBy      
+      var f = false;
+      for(let j=0;j<x.length;j++){
+        
+        var pair = x[j];
+        
+        if(pair.benefitor===name){
+          microcost = pair.value
+          f=true;
+          break;
+        }
+
+      }
+      if(f){
+        if(hasOwnProperty.call(cost, topay)){
+          cost[topay]=cost[topay]+microcost
+
+        }else{
+          cost[topay]=microcost
+        }
+      }
+      var list = []
+    for (const key in cost) {
+      let smallist = []
+      smallist.push(key)
+      smallist.push(cost[key])
+      list.push(smallist)
+      
+    }
+     
+
+    }
+    res.json({costs: list})
+ 
 };
 
 
@@ -75,7 +131,7 @@ exports.updateExpense = async (req, res) => {
 
     res.json(updatedExpense);
   } catch (error) {
-    errorHandler(res, error); 
+    //errorHandler(res, error); 
   }
 };
 
@@ -92,6 +148,6 @@ exports.deleteExpense = async (req, res) => {
 
     res.json({ message: 'Expense deleted successfully' });
   } catch (error) {
-    errorHandler(res, error); 
+    //errorHandler(res, error); 
   }
 };

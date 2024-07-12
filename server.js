@@ -24,7 +24,7 @@ app.use(express.json());
 const apiRouter = require('./routes/api'); 
 app.use('/api', apiRouter);
 
-const errorHandler = require('./utils/errorHandler'); 
-app.use(errorHandler);
+// const errorHandler = require('./utils/errorHandler'); 
+// app.use(errorHandler);
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
