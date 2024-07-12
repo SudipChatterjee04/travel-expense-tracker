@@ -6,7 +6,7 @@ const verifyToken = require('../middlewares/authMiddleware');
 
 console.log('api.js file is being executed');
 
-// router.post('/signup', authController.signup);
+ router.post('/signup', authController.createUser);
 // router.post('/login', authController.login);
 
 // router.use(verifyToken);

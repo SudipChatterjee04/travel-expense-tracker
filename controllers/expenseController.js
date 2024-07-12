@@ -1,4 +1,5 @@
 const Expense = require('../models/Expense');
+const User = require('../models/User')
 // const verifyToken = require('../middlewares/authMiddleware'); // Import authentication middleware
 
 // Create new expense (POST)
@@ -18,6 +19,8 @@ exports.createExpense = async (req, res) => {
     res.json({message: "success"})
   
 };
+
+
 
 
 exports.getExpense = async (req, res) => {
