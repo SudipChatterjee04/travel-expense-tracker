@@ -7,7 +7,7 @@ exports.createExpense = async (req, res) => {
   
     const { costSplit, category,paidBy, recordedBy,note,place } = req.body;
     console.log("hi")
-    const objj = costSplit.map(([name,amount])=>({
+    const objj = costSplit.map(({name,amount})=>({
       benefitor: name,
       value: amount
     }))
