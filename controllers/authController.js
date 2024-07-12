@@ -17,8 +17,8 @@ exports.createUser = async (req, res) => {
 
 exports.getUser = async (req, res) => {
   
-  const {name} = req.params;
-  const ret = await User.find({name});
+  
+  const ret = await User.find({});
   console.log(ret)
   
 

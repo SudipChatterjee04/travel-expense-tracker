@@ -8,7 +8,7 @@ console.log('api.js file is being executed');
 
  router.post('/signup', authController.createUser);
  router.get('/checks', authController.checks);
- router.get('/fetchuser/:name', authController.getUser);
+ router.get('/fetchuser/', authController.getUser);
 // router.post('/login', authController.login);
 
 // router.use(verifyToken);
