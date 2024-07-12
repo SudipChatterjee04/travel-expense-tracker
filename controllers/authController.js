@@ -8,10 +8,21 @@ const errorHandler = require('../utils/errorHandler');
 exports.createUser = async (req, res) => {
   
   const {name,type} = req.body;
-  const ret = User.create({name,type});
+  const ret = await User.create({name,type});
   
 
   res.json({message: "success"})
+
+};
+
+exports.getUser = async (req, res) => {
+  
+  const {name} = req.params;
+  const ret = await User.find({name});
+  console.log(ret)
+  
+
+  res.json({data: ret})
 
 };
 exports.checks = async (req, res) => {
