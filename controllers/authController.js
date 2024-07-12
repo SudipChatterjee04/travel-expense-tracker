@@ -14,6 +14,14 @@ exports.createUser = async (req, res) => {
   res.json({message: "success"})
 
 };
+exports.checks = async (req, res) => {
+  
+  
+  
+
+  res.json({message: "checking123"})
+
+};
 
 // exports.signup = async (req, res) => {
 //   try {
